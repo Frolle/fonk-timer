@@ -44,7 +44,7 @@
 
                 if(today.getHours() >= 8 && today.getHours() < 17) {
                     workHours = workHours + (17 - today.getHours() - 1);
-                    if(today.getMinutes >= 30) {
+                    if(today.getMinutes() >= 30) {
                         workHours = (workHours - 1) + "½";
                     }
                 }
