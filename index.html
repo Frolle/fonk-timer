@@ -29,16 +29,18 @@
         </div>
         <script>
             var countDownDate = new Date("Dec 18, 2020 17:00").getTime();
-            var timerFunction = setInterval(function() {
+            var timerFunction = setInterval(calculateAndSetWorkHours(), 1000);
+
+            function calculateAndSetWorkHours(){
                 today = new Date();
                 var now = today.getTime();
 
                 // Find the distance between now and the count down date
                 var distance = countDownDate - now;
 
-                var weeks = Math.floor(distance/(1000*60*60*24*7));
+                var weeks = Math.floor(distance/(1000*60*60*24*7)); // FLoor because we don't want to include the last weekend.
 
-                var workDays = Math.ceil(distance/(1000*60*60*24)) - (weeks*2);
+                var workDays = Math.ceil(distance/(1000*60*60*24)) - (weeks*2); // Exclude weekends from the work days.
 
                 var workHours = workDays*8;
 
@@ -53,7 +55,7 @@
                         }
                     }
                 }
-                // Display the result in the element with id="demo"
+                // Display the result in the element with id="timer"
                 document.getElementById("timer").innerHTML = workHours + " arbetstimmar kvar!";
 
                 document.body.style.backgroundColor = pickColor();
@@ -64,7 +66,7 @@
                     clearInterval(timerFunction);
                     document.getElementById("timer").innerHTML = "GRATTIS FONK! NU ÄR DU FRI! GL HF PÅ MINDARK! (glöm inte bort JorreBorre)";
                 }
-            }, 1000);
+            }
 
             function pickColor(){
                 var listOfColors = ["AliceBlue","AntiqueWhite","Aqua","Aquamarine","Azure","Beige","Bisque","Black","BlanchedAlmond","Blue","BlueViolet","Brown","BurlyWood","CadetBlue","Chartreuse","Chocolate",
