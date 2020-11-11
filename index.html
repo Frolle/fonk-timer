@@ -29,7 +29,8 @@
         </div>
         <script>
             var countDownDate = new Date("Dec 18, 2020 17:00").getTime();
-            var timerFunction = setInterval(calculateAndSetWorkHours(), 1000);
+            calculateAndSetWorkHours(); // Run once when the site is loaded.
+            var timerFunction = setInterval(calculateAndSetWorkHours, 1000);
 
             function calculateAndSetWorkHours(){
                 today = new Date();
