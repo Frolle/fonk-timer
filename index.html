@@ -30,10 +30,23 @@
         <script>
             var countDownDate = new Date("Dec 18, 2020 17:00").getTime();
             calculateAndSetWorkHours(); // Run once when the site is loaded.
-            var timerFunction = setInterval(calculateAndSetWorkHours, 1000);
+            var timerFunction = setInterval(calculateAndSetWorkHours, 10000);
 
             function calculateAndSetWorkHours(){
                 today = new Date();
+                if(today.getDay() == 0 || today.getDay() == 6 || (today.getDay() == 5 && today.getHours() >= 17 && today.getMinutes >= 1)){
+                    switch(today.getDay()) {
+                        case 0:
+                            today.setDate(today.getDate() - 2);
+                            break;
+                        case 6:
+                            today.setDate(today.getDate() - 1);
+                            break;
+                    }
+                    today.setHours(17);
+                    today.setMinutes(0); 
+                } // Ugly fix to avoid counting weekends as working hours if you're watching the site on the weekend.
+
                 var now = today.getTime();
 
                 // Find the distance between now and the count down date
