@@ -28,12 +28,13 @@
             </div>
         </div>
         <script>
-            var countDownDate = new Date("Dec 18, 2020 17:00").getTime();
-            calculateAndSetWorkHours(); // Run once when the site is loaded.
-            var timerFunction = setInterval(calculateAndSetWorkHours, 10000);
+            var countDownDate = new Date("Dec 18, 2020 17:00:00").getTime();
+            updateWorkHours(); // Run once when the site is loaded.
+            var timerFunction = setInterval(updateWorkHours, 1000);
 
-            function calculateAndSetWorkHours(){
+            function updateWorkHours(){
                 today = new Date();
+                isWeekend = false;
                 if(today.getDay() == 0 || today.getDay() == 6 || (today.getDay() == 5 && today.getHours() >= 17 && today.getMinutes >= 1)){
                     switch(today.getDay()) {
                         case 0:
@@ -45,14 +46,32 @@
                     }
                     today.setHours(17);
                     today.setMinutes(0); 
+                    isWeekend = true;
                 } // Ugly fix to avoid counting weekends as working hours if you're watching the site on the weekend.
 
+                var calculatedHours = calculateWorkHours(isWeekend);
+                // Display the result in the element with id="timer"
+                document.getElementById("timer").innerHTML = calculatedHours.workHours + " arbetstimmar kvar!";
+
+                document.body.style.backgroundColor = pickColor();
+                var bgForTron = document.getElementById("da-tron");
+                bgForTron.style.backgroundColor = pickColor();
+                // If the count down is finished, write some text
+                if (calculatedHours.distance <= 0) {
+                    clearInterval(timerFunction);
+                    document.getElementById("timer").innerHTML = "GRATTIS FONK! NU ÄR DU FRI! GL HF PÅ MINDARK! (glöm inte bort JorreBorre)";
+                }
+            }
+
+            function calculateWorkHours(isWeekend) {
                 var now = today.getTime();
 
                 // Find the distance between now and the count down date
                 var distance = countDownDate - now;
 
                 var weeks = Math.floor(distance/(1000*60*60*24*7)); // FLoor because we don't want to include the last weekend.
+
+                weeks = isWeekend ? weeks + 1: weeks; // Another ugly fix to have it display correctly even during weekends.
 
                 var workDays = Math.ceil(distance/(1000*60*60*24)) - (weeks*2); // Exclude weekends from the work days.
 
@@ -69,17 +88,7 @@
                         }
                     }
                 }
-                // Display the result in the element with id="timer"
-                document.getElementById("timer").innerHTML = workHours + " arbetstimmar kvar!";
-
-                document.body.style.backgroundColor = pickColor();
-                var bgForTron = document.getElementById("da-tron");
-                bgForTron.style.backgroundColor = pickColor();
-                // If the count down is finished, write some text
-                if (distance < 0) {
-                    clearInterval(timerFunction);
-                    document.getElementById("timer").innerHTML = "GRATTIS FONK! NU ÄR DU FRI! GL HF PÅ MINDARK! (glöm inte bort JorreBorre)";
-                }
+                return {distance, workHours};
             }
 
             function pickColor(){
